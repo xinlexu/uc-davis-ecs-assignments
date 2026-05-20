@@ -7,7 +7,7 @@ This repository keeps source code and small supporting data files while leaving 
 ## Contents
 
 - `ECS050`: assembly/C lab work.
-- `ECS32A`: introductory Python assignments, with the old `ECS32A/HW` layer removed.
+- `ECS32A`: introductory Python assignments, numbered as `ECS32A/1` through `ECS32A/7`.
 - `ECS36B`: C++ assignments.
 - `ECS36C`: C/C++ data structures coursework and practice exercises.
 - `ECS130`: numerical linear algebra homework source and small support data.
