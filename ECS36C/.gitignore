@@ -1,0 +1,26 @@
+.DS_Store
+*.o
+*.out
+*.exe
+*.dSYM/
+build/
+tests-out/
+
+# Local binaries produced by practice exercises
+anagram
+bin_str
+card_prob
+change
+complex_mult
+conversions
+grade_need
+investments
+loan_cost
+mat_add
+pascal
+perimeter
+pi
+quad
+testnumber
+wcount
+connectn.out

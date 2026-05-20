@@ -1,0 +1,28 @@
+.DS_Store
+*.o
+*.out
+*.exe
+*.dSYM/
+*.cov
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.idea/
+.vscode/
+
+# Generated coursework outputs
+tests-out/
+build/
+dist/
+forwardsub_benchmarks.pdf
+
+# Local binaries from the assignments
+wcat
+wgrep
+wzip
+wunzip
+wish
+gunrock
+server
+test1
