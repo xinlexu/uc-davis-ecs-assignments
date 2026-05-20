@@ -1,0 +1,864 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./js/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+  <link rel="stylesheet" href="./css/layui.css">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <title>Document</title>
+  <style>
+    input[type=text],
+    input[type=number] {
+      font-size: 14px;
+    }
+
+    .area1 {
+      width: 500px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .area1 select {
+      width: 150px !important;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    .layui-form-select {
+      display: flex;
+      /* width: 150px !important; */
+    }
+
+
+    .upload-container {
+      width: 100px;
+      height: 100px;
+      margin: 20px auto;
+      position: relative;
+      border: 2px dashed #aaa;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .upload-container input[type='file'] {
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+
+    .upload-container::before {
+      content: '+';
+      font-size: 36px;
+      color: #aaa;
+      position: absolute;
+    }
+
+    .arrow-btn {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .layui-btn {
+      border-radius: 22px;
+    }
+
+    .group {
+      width: 500px;
+      position: relative;
+    }
+
+    .input {
+      font-size: 16px;
+      padding: 10px 10px 10px 5px;
+      display: block;
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #515151;
+      background: transparent;
+    }
+
+    .input:focus {
+      outline: none;
+    }
+
+    .form-label {
+      color: #999;
+      font-size: 18px;
+    }
+
+    .label {
+      color: #999;
+      font-size: 18px;
+      font-weight: normal;
+      position: absolute;
+      pointer-events: none;
+      left: 5px;
+      top: 10px;
+      transition: 0.2s ease all;
+      -moz-transition: 0.2s ease all;
+      -webkit-transition: 0.2s ease all;
+    }
+
+    .input:focus~label,
+    .input:valid~label {
+      top: -20px;
+      font-size: 14px;
+      color: #5264AE;
+    }
+
+    .bar {
+      position: relative;
+      display: block;
+      width: 100%;
+    }
+
+    .bar:before,
+    .bar:after {
+      content: '';
+      height: 2px;
+      width: 0;
+      bottom: 1px;
+      position: absolute;
+      background: #5264AE;
+      transition: 0.2s ease all;
+      -moz-transition: 0.2s ease all;
+      -webkit-transition: 0.2s ease all;
+    }
+
+    .bar:before {
+      left: 50%;
+    }
+
+    .bar:after {
+      right: 50%;
+    }
+
+    .input:focus~.bar:before,
+    .input:focus~.bar:after {
+      width: 50%;
+    }
+
+    .highlight {
+      position: absolute;
+      height: 60%;
+      width: 100px;
+      top: 25%;
+      left: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .input:focus~.highlight {
+      animation: inputHighlighter 0.3s ease;
+    }
+
+    @keyframes inputHighlighter {
+      from {
+        background: #5264AE;
+      }
+
+      to {
+        width: 0;
+        background: transparent;
+      }
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      display: none;
+      visibility: hidden;
+    }
+
+    .checkbox-wrapper .cbx {
+      margin: auto;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .checkbox-wrapper .cbx span {
+      display: inline-block;
+      vertical-align: middle;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .checkbox-wrapper .cbx span:first-child {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      transform: scale(1);
+      vertical-align: middle;
+      border: 1px solid #9098a9;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-wrapper .cbx span:first-child svg {
+      position: absolute;
+      top: 3px;
+      left: 2px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 16px;
+      stroke-dashoffset: 16px;
+      transition: all 0.3s ease;
+      transition-delay: 0.1s;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .checkbox-wrapper .cbx span:first-child:before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: #506eec;
+      display: block;
+      transform: scale(0);
+      opacity: 1;
+      border-radius: 50%;
+    }
+
+    .checkbox-wrapper .cbx span:last-child {
+      padding-left: 8px;
+    }
+
+    .checkbox-wrapper .cbx:hover span:first-child {
+      border-color: #506eec;
+    }
+
+    .checkbox-wrapper .inp-cbx:checked+.cbx span:first-child {
+      background: #506eec;
+      border-color: #506eec;
+      animation: wave-46 0.4s ease;
+    }
+
+    .checkbox-wrapper .inp-cbx:checked+.cbx span:first-child svg {
+      stroke-dashoffset: 0;
+    }
+
+    .checkbox-wrapper .inp-cbx:checked+.cbx span:first-child:before {
+      transform: scale(3.5);
+      opacity: 0;
+      transition: all 0.6s ease;
+    }
+
+    @keyframes wave-46 {
+      50% {
+        transform: scale(0.9);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="" id="app">
+    <div class="mx-auto  py-20">
+      <div class="container" v-show="index == 0">
+        <div class="header">
+          <h2 class="text-3xl">Welcome to the Password Generator</h2>
+        </div>
+          <div class="header">
+          <h5 class="text-1xl"> by Xinle Xu, Bipasha Sengupta, Yi-Hsuan Chiang, John Missal, Anayeli Martinez, Swati Iyer</h5>
+        </div>
+        <div class="upload-container"  v-show="!imgUrl">
+          <input type="file" @change="handleFileCHange" id="avatarUpload" name="avatar" />
+
+        </div>
+        <img v-show="imgUrl" id="imagePreview" :src="imgUrl" alt="Image preview..." style="max-width: 500px;">
+        <div class="group">
+          <input name="username" required lay-verify="required" type="text" class="input" autocomplete="off"
+            v-model="form.name">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="label">Username</label>
+        </div>
+      </div>
+      <div class="flex flex-col gap-6" v-show="index == 1">
+        <h1 class="text-3xl font-bold">Set PasswordRequirements</h1>
+        <div class="group">
+          <input name="username" required lay-verify="required" type="number" class="input" autocomplete="off"
+            v-model="form.passwordLen">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="label">Enter Password Length(minimum 8)</label>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="checkbox-wrapper">
+            <input v-model="form.upper" type="checkbox" id="upper" class="inp-cbx" />
+            <label for="upper" class="cbx">
+              <span>
+                <svg viewBox="0 0 12 10" height="10px" width="12px">
+                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                </svg>
+              </span>
+              <span class="text-xl">Uppercase(A-Z)</span>
+            </label>
+          </div>
+          <div class="checkbox-wrapper">
+            <input v-model="form.lower" type="checkbox" id="lower" class="inp-cbx" />
+            <label for="lower" class="cbx">
+              <span>
+                <svg viewBox="0 0 12 10" height="10px" width="12px">
+                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                </svg>
+              </span>
+              <span class="text-xl">Lowercase(a-z)</span>
+            </label>
+          </div>
+          <div class="checkbox-wrapper">
+            <input v-model="form.symbol" type="checkbox" id="symbol" class="inp-cbx" />
+            <label for="symbol" class="cbx">
+              <span>
+                <svg viewBox="0 0 12 10" height="10px" width="12px">
+                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                </svg>
+              </span>
+              <span class="text-xl">Symbol(@S!#)</span>
+            </label>
+          </div>
+          <div class="checkbox-wrapper">
+            <input v-model="form.number" type="checkbox" id="number" class="inp-cbx" />
+            <label for="number" class="cbx">
+              <span>
+                <svg viewBox="0 0 12 10" height="10px" width="12px">
+                  <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                </svg>
+              </span>
+              <span class="text-xl">Number(0-9)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-6" v-show="index == 2">
+        <div class="flex flex-col gap-2">
+          <h1 class="text-3xl font-bold">Questionnaire</h1>
+          <p class="text-xl">
+            Choose at least 3 questions to answer.Thanks
+          </p>
+        </div>
+        <div class="group">
+          <input name="username" required lay-verify="required" type="text" class="input" autocomplete="off"
+            v-model="form.q1">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="label">1. What was the name of your elementary school?</label>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="form-label">2.What is your favorite food?</p>
+          <div class="layui-input-inline w-[500px] border rounded-md text-xl" id="category"></div>
+          <!-- 娣诲姞涓€涓殣钘忕殑input鍏冪礌锛岀敤鏉ュ瓨鍌ㄩ€変腑鏁版嵁鐨剉alue鍊?-->
+          <input type="hidden" id="hiddenValue" v-model="form.q2">
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="form-label">3.Which city were you born in?</p>
+          <div class="area1 layui-form">
+            <select name="country" id="country" class="" lay-filter="country" v-model="address.con" placeholder="place selected">
+              <option value="China">China</option>
+              <option value="America">America</option>
+              <option value="Japan">Japan</option>
+              <option value="England">England</option>
+              <option value="Korea">Korea</option>
+              <option value="India">India</option>
+              <option value="Portugal">Portugal</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Italy">Italy</option>
+            </select>
+            <input v-if="show" type="text" class="layui-input border rounded-md text-xl" v-model="address.pro"
+               id="other" />
+            <div id="china" :style="{'display': show?'none':'flex', gap: '10px'}">
+              <select name="province" lay-filter="province" class="" v-model="address.pro"></select>
+              <select name="city" lay-filter="city" class="" v-model="address.city"></select>
+            </div>
+          </div>
+        </div>
+        <div class="group">
+          <input name="q4" required lay-verify="required" type="text" class="input" autocomplete="off"
+            v-model="form.q4">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="label">4.What is your favorite pastime (answer in one word)?</label>
+        </div>
+        <div class="group">
+          <input name="q5" required lay-verify="required" type="text" class="input" autocomplete="off"
+            v-model="form.q5">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="label">5. 10 years from now, which city do you see yourself in?</label>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4" v-show="index == 3">
+        <h1 class="text-3xl font-bold">Questionnaire</h1>
+        <div class="text-xl">
+          Choose at least 1 questions to answer.Thanks
+        </div>
+        <div class="group">
+          <input name="favoriteNum" type="number" required lay-verify="required"  class="input" autocomplete="off"
+            v-model="form.favoriteNum">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label class="label">1. What is your favorite number ?</label>
+        </div>
+        <div class="flex flex-col gap-4">
+          <p class="form-label">2.What year is your parent's birthday (any parent)?</p>
+          <div class="group">
+            <input @change="handleChange" lay-filter="birthday" v-model="form.birthday" type="text" class="layui-input"
+              id="birthday" name="birthday" placeholder="select date">
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4" v-show="index == 4">
+        <h1 class="text-3xl">Your password is here</h1>
+        <span id="text" class="text-2xl text-bold"> {{password}} </span>
+        <div class="flex gap-2 items-center">
+          <button class="text-2xl button border bg-[#06b6d4] text-white rounded-md px-4 py-1" @click="copy()" id="copyButton"
+            data-clipboard-target="#text">
+            Copy
+          </button>
+          <button class="text-2xl button border bg-blue-400 text-white rounded-md px-4 py-1" @click="reGenerate"
+            data-clipboard-target="#text">
+          Regenerate
+          </button>
+        </div>
+        <div class="flex flex-col gap-2">
+          <div>history: </div>
+          <!-- <div v-for="n of 10" :key="n" class="text-xl text-[#a855f7]">{{n}}</div> -->
+          <div v-for="(item, index) in history" :key="index" class="text-xl text-[#a855f7]">{{ item }}</div>
+
+        </div>
+        <div class="flex gap-2 items-center">
+          <div class="text-2xl">score: </div>
+          <div id="pass-rate"></div>
+        </div>
+
+        <div id="captchaContainer" style="display: none;">
+          <button id="captchaButton" class="captcha-button">Verify that I am not a robot</button>
+      </div>
+      </div>
+      <div class="arrow-btn flex gap-3 justify-center">
+        <button v-show="index != 0" class="text-2xl button bg-[#f97316] text-white border rounded-md mt-10 px-4 py-1" @click="back()">
+          Back
+        </button>
+        <button v-show="![3, 4].includes(index) "
+          class="text-2xl button border rounded-md mt-10 px-4 py-1 bg-cyan-500 text-white layui-btn layui-btn-normal"
+          @click="next">Next</button>
+        <button v-show="index == 3" class="text-2xl button border rounded-md mt-10 px-4 py-1 bg-cyan-500 text-white"
+          @click="submit()">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="./js/xm-select.js"></script>
+<script type="text/javascript" src="./js/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="./js/layui.js"></script>
+<script src="./js/areas.js"></script>
+<script src="./js/area_select.js"></script>
+
+<script>
+  var app = new Vue({
+    el: "#app",
+    data: {
+      layer: null,
+      index: 0,
+      imgUrl: "",
+      password: "",
+      history:[],
+      form: {
+        name: "",
+        passwordLen: "",
+        favoriteNum: "",
+        birthday: "",
+        upper: false,
+        lower: false,
+        symbol: false,
+        number: false,
+        q1: "",
+        q2: "",
+        q3: "",
+        q4: "",
+        q5: "",
+      },
+      address: {
+        con: "",
+        pro: "",
+        city: ""
+      },
+      show: true
+    },
+    methods: {
+      reset() {
+        this.index = 0;
+
+        this.form = {
+          name: "",
+          passwordLen: "",
+          favoriteNum: "",
+          birthday: "",
+          upper: false,
+          lower: false,
+          symbol: false,
+          number: false,
+          q1: "",
+          q2: "",
+          q3: "",
+          q4: "",
+          q5: "",
+        };
+        this.address = {
+          con: "",
+          pro: "",
+          city: ""
+        }
+      },
+      handleFileCHange (event) {
+        console.log(event.target.files)
+        const file = event.target.files[0]; // 鑾峰彇鐢ㄦ埛閫夋嫨鐨勬枃浠?
+    if (!file) {
+        return; // 濡傛灉娌℃湁鏂囦欢琚€夋嫨锛屽垯鐩存帴杩斿洖
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.imgUrl = e.target.result
+
+    };
+    reader.readAsDataURL(file); // 浠ataURL鐨勫舰寮忚鍙栨枃浠?
+      },
+      auth() {
+        $(document).ready(function(){
+              $("#captchaButton").click(function(){
+                  $(this).text("Verifying...");
+                  setTimeout(() => {
+                      $(this).text("Verified!");
+                      $(this).css('background-image', 'linear-gradient(to right, #00b09b, #96c93d)');
+                  }, 1500);
+                  document.getElementById('captchaContainer').style.display = 'none';
+
+                  // 妯℃嫙楠岃瘉杩囩▼
+              });
+            });
+            const passwordDisplay = document.getElementById('passwordDisplay');
+            if (passwordDisplay) {
+              passwordDisplay.textContent = 'New-Password-' + Math.floor(Math.random() * 1000000);
+            }
+      },
+      reGenerate() {
+        document.getElementById('captchaContainer').style.display = 'block';
+        // this.auth()
+
+        $(document).ready(function(){
+              $("#captchaButton").click(function(){
+                  $(this).text("Verifying...");
+                  setTimeout(() => {
+                      $(this).text("Verified");
+                      $(this).css('background-image', 'linear-gradient(to right, #00b09b, #96c93d)');
+                  }, 1500);
+                  document.getElementById('captchaContainer').style.display = 'none';
+
+                  // 妯℃嫙楠岃瘉杩囩▼
+              });
+            });
+            setTimeout(() => {
+
+                  }, 1500);
+        var captchaButton = document.getElementById('captchaButton');
+        // captchaButton.addEventListener('click', function() {
+        //     // Assume the captcha is verified. In a real scenario, you'd do a verification process.
+        //     // After verification, update the password display and hide the captcha button.
+        //     $(document).ready(function(){
+        //       $("#captchaButton").click(function(){
+        //           $(this).text("楠岃瘉涓?..");
+        //           setTimeout(() => {
+        //               $(this).text("楠岃瘉鎴愬姛锛?);
+        //               $(this).css('background-image', 'linear-gradient(to right, #00b09b, #96c93d)');
+        //           }, 1500); // 妯℃嫙楠岃瘉杩囩▼
+        //       });
+        //     });
+        //     document.getElementById('passwordDisplay').textContent = 'New-Password-' + Math.floor(Math.random() * 1000000);
+        //     // document.getElementById('captchaContainer').style.display = 'none';
+        // });
+        const submitParams = Object.assign({}, this.form, this.address)
+
+        const that = this
+         fetch("http://127.0.0.1:5000/gener", {
+           method: "post",
+           headers: {
+     "Content-Type": "application/json",
+   },
+           body: JSON.stringify(submitParams)
+         }).then(response => {
+   // 棣栧厛妫€鏌ュ搷搴旂姸鎬併€傚鏋滅姸鎬佺爜鍦?00-299涔嬮棿锛屽畠琛ㄧず璇锋眰鏄垚鍔熺殑銆?
+   if (!response.ok) {
+     throw new Error('Network response was not ok');
+   }
+   // 瑙ｆ瀽JSON鍝嶅簲
+   return response.json();
+ })
+ .then(data => {
+   // 澶勭悊瑙ｆ瀽鍚庣殑鏁版嵁
+   console.log("Received response:", data);
+   // 鍋囪鎴戜滑甯屾湜灏嗚繑鍥炵殑鏁版嵁淇濆瓨鍒發ocalStorage
+   that.password=data.password
+   that.history=data.history
+
+ })
+ .catch(error => {
+   // 澶勭悊璇锋眰杩囩▼涓彂鐢熺殑閿欒
+   console.error('There was a problem with your fetch operation:', error);
+ });
+      },
+      handleChange(e) {
+        console.log(e)
+      },
+      start() {
+        if (!this.form.name) {
+          alert("please enter your name");
+          return;
+        }
+        this.index = this.index + 1;
+        let formData = localStorage.getItem(this.form.name);
+        if (formData) {
+          let form = JSON.parse(formData);
+          this.form = form;
+        }
+      },
+      copy() {
+        var clipboard = new ClipboardJS("#copyButton");
+        clipboard.on("success", function (e) {
+          alert("Text copied to clipboard: " + e.text);
+        });
+      },
+      back() {
+        this.index = this.index - 1;
+      },
+      next() {
+        if (this.index == 0) {
+          if (!this.form.name) {
+            return this.layer.msg('name', {icon: 0});
+          }
+        }
+        if (this.index == 1) {
+          if (!this.form.passwordLen) {
+            return this.layer.msg('Please fill in the number of digits for generating the password', {icon: 0});
+          }
+          const checkBoxRes = [this.form.upper,this.form.lower, this.form.symbol,this.form.number].filter(Boolean)
+
+          if (checkBoxRes.length < 2) {
+            return this.layer.msg('Please select at least two password generation rules', {icon: 0});
+          }
+        }
+        if (this.index == 2) {
+          const formItemRes = [this.form.q1, this.form.q2, this.form.q4, this.form.q5, this.address.con].filter(Boolean)
+          if (formItemRes.length < 3) {
+            return this.layer.msg('Please select at least three questions', {icon: 0});
+          }
+        }
+        if (this.index == 3) {
+          const otherFormRes = [this.form.favoriteNum, this.form.birthday].filter(Boolean)
+          if (otherFormRes.length < 1) {
+            return this.layer.msg('Please select at least one question', {icon: 0});
+          }
+
+        }
+        this.index = this.index + 1;
+      },
+      async submit() {
+        // this.form.q3 = this.address.con + (areas[this.address.pro] != undefined ? areas[this.address.pro] : '') + (areas[this.address.city] != undefined ? areas[this.address.city] : '');
+        // if (this.form.upper + this.form.lower + this.form.symbol + this.form.number < 2) {
+        //   alert("Please select more than 2 password requirements");
+        //   return;
+        // }
+        // if (!this.form.q1 + !this.form.q2 + !this.form.q3 + !this.form.q4 + !this.form.q5 > 2) {
+        //   alert("Please choose at least 3 questions to answer");
+        //   return;
+        // }
+        this.next()
+        // if (this.index == 1) {
+        //   this.index = 2;
+        // }
+        const submitParams = Object.assign({}, this.form, this.address)
+
+       const that = this
+        fetch("http://127.0.0.1:5000/gener", {
+          method: "post",
+          headers: {
+    "Content-Type": "application/json",
+  },
+          body: JSON.stringify(submitParams)
+        }).then(response => {
+  // 棣栧厛妫€鏌ュ搷搴旂姸鎬併€傚鏋滅姸鎬佺爜鍦?00-299涔嬮棿锛屽畠琛ㄧず璇锋眰鏄垚鍔熺殑銆?
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  // 瑙ｆ瀽JSON鍝嶅簲
+  return response.json();
+})
+.then(data => {
+  // 澶勭悊瑙ｆ瀽鍚庣殑鏁版嵁
+  console.log("Received response:", data);
+  // 鍋囪鎴戜滑甯屾湜灏嗚繑鍥炵殑鏁版嵁淇濆瓨鍒發ocalStorage
+  that.password=data.password
+
+})
+.catch(error => {
+  // 澶勭悊璇锋眰杩囩▼涓彂鐢熺殑閿欒
+  console.error('There was a problem with your fetch operation:', error);
+});
+        console.log("submitParams",submitParams)
+        localStorage.setItem(this.form.name, JSON.stringify(this.form));
+      },
+    },
+    mounted() {
+      var th = this;
+      setTimeout(() => {
+const countrySelect = document.querySelector(".area1 .layui-select-title input")
+  console.log('countrySelect', countrySelect)
+      countrySelect.placeholder = "please selected"
+      }, 1000)
+
+
+
+      $(function () {
+        area_select(".area1", "420106");
+        layui.form.render('select');
+        var layer = layui.layer;
+
+        var util = layui.util;
+        var rate = layui.rate;
+        th.layer = layer;
+        // 娓叉煋
+        rate.render({
+          elem: '#pass-rate'
+        });
+
+        var laydate = layui.laydate;
+        // 娓叉煋
+        laydate.render({
+          elem: '#birthday',
+            lang: 'en',
+          done: function (value, date, endDate) {
+            th.form.birthday = value;
+          }
+        });
+
+        country.placeholder = "place"
+
+        layui.form.on('select(country)', function (data) {
+          console.log('country', data)
+          th.address.con = data.value;
+
+          layui.form.render('select');
+          if (data.value != 'China') {
+            th.show = true
+
+          }
+          else {
+            th.show = false
+
+          }
+
+          layui.form.render();
+        });
+        layui.form.on('select(province)', function (data) {
+          th.address.pro = data.value;
+
+          layui.form.render('select');
+        });
+        layui.form.on('select(city)', function (data) {
+          th.address.city = data.value;
+
+          layui.form.render('select');
+        });
+      });
+
+      // 鍒涘缓涓€涓笅鎷夐€夋嫨妗嗭紝骞惰缃浉鍏冲睘鎬?
+      var category = xmSelect.render({
+        el: '#category', // 灏嗕笅鎷夐€夋嫨妗嗘寕杞藉埌id涓篶ategory鐨勫厓绱犱笂
+        language: 'en',
+        toolbar: {//寮€鍚崟閫夊垯涓嶉渶瑕佸ご閮ㄥ伐鍏锋爮
+          show: true, // 鏄剧ず宸ュ叿鏍?
+          list: ['ALL', 'CLEAR'] // 宸ュ叿鏍忎笂鐨勯€夐」鍒楄〃
+        },
+        theme: {
+          color: '#51495f', // 璁剧疆涓婚棰滆壊
+        },
+        filterable: true, // 鍏佽绛涢€?
+        paging: true, // 鍚敤鍒嗛〉
+        // radio: true,//鍗曢€?
+        pageSize: 5,
+        on: function (data) {
+          //arr:  褰撳墠澶氶€夊凡閫変腑鐨勬暟鎹?
+          var arr = data.arr;
+          // 浠庨€変腑鏁版嵁涓彁鍙杤alue鍊?
+          var value = '';
+          for (var i = 0; i < arr.length; i++) {
+            value += arr[i].value
+            if (i < arr.length - 1)
+              value += ','
+          }
+
+          // 瀛樺偍鎵€閫夋暟鎹殑鍊?杩欓噷鏄湪鍓嶇闅愯棌浜嗕功绫嶇被鍒緭鍏ユ锛屽皢鎻愬嚭鍑烘潵鐨勫€煎啓鍏ュ埌琛ㄥ崟涓究浜庢彁浜ゅ埌鏁版嵁搴撲腑
+          document.getElementById('hiddenValue').value = value;//杩欓噷鏄皢鎴戣嚜宸遍渶瑕佺殑鍊艰繑鍥炲埌鍓嶇鐣岄潰锛屽啀鎻愪氦琛ㄥ崟鐨勬椂鍊欎笉闇€瑕佸皢鏁版嵁杞寲锛屽綋鐒朵綘涔熷彲浠ヨ嚜宸辨懜绱竴涓?
+          // <input type="hidden" id="hiddenValue" name="category">
+          th.form.q2 = document.getElementById('hiddenValue').value;
+
+        },
+        data: [] // 鍒濆鍖栨暟鎹负绌烘暟缁?
+      })
+
+      var newData = [
+    { name: 'Apple', value: 0 },
+    { name: 'Beef', value: 1 },
+    { name: 'Cake', value: 2 },
+    { name: 'Egg', value: 3 },
+    { name: 'Fish', value: 4 },
+    { name: 'Hotdog', value: 5 },
+    { name: 'Ice Cream', value: 6 },
+    { name: 'Jelly', value: 7 },
+    { name: 'Kiwi', value: 8 },
+    { name: 'Lemon', value: 9 },
+    { name: 'Mango', value: 10 },
+    { name: 'Noodles', value: 11 },
+    { name: 'Orange', value: 12 },
+    { name: 'Pizza', value: 13 },
+    { name: 'Quinoa', value: 14 },
+    { name: 'Rice', value: 15 },
+    { name: 'Salmon', value: 16 },
+    { name: 'Tomato', value: 17 },
+    { name: 'Udon', value: 18 },
+    { name: 'Vegetable Salad', value: 19 },
+    { name: 'Watermelon', value: 20 },
+    { name: 'Xiaolongbao', value: 21 },
+    { name: 'Yogurt', value: 22 },
+    { name: 'Zucchini', value: 23 },
+    { name: 'Avocado', value: 24 },
+    { name: 'Broccoli', value: 25 },
+    { name: 'Carrot', value: 26 },
+    { name: 'Dates', value: 27 },
+    { name: 'Espresso', value: 28 },
+    { name: 'Falafel', value: 29 }
+];
+
+      // 鏇存柊涓嬫媺閫夋嫨妗嗙殑鏁版嵁
+      category.update({ data: newData });
+    },
+  });
+</script>
+
+</html>

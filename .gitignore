@@ -1,4 +1,6 @@
 .DS_Store
+._*
+__MACOSX/
 *.o
 *.out
 *.exe
@@ -10,12 +12,19 @@ __pycache__/
 .coverage
 .idea/
 .vscode/
+*.sqlite
+*.sqlite3
+*.db
+*.pdf
+*.zip
+*.7z
+*.rar
+*.class
 
 # Generated coursework outputs
 tests-out/
 build/
 dist/
-forwardsub_benchmarks.pdf
 
 # Local binaries from the assignments
 wcat
