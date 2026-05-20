@@ -1,6 +1,6 @@
-# UC Davis ECS Coursework
+# UC Davis Coursework
 
-Curated programming assignments from UC Davis ECS courses.
+Curated UC Davis computer science coursework.
 
 This repository keeps source code and small supporting data files while leaving out lecture PDFs, handouts, IDE settings, compiled binaries, debug bundles, coverage files, local databases, and large generated test outputs.
 
